@@ -3,21 +3,26 @@ import streamlit as st
 from datetime import datetime, timedelta
 import plotly.express as px
 
-# Load the chat data
-chat_file_path = 'raw_data.csv'  # Replace with the actual path
-chat_df = pd.read_csv(chat_file_path)
+# Streamlit UI
+st.title("North Star Metric Dashboard")
 
-# Load the user profile data
-profile_file_path = 'users.csv'  # Replace with the actual path
-profile_df = pd.read_csv(profile_file_path)
-profile_df['userId'] = profile_df['_id']
+# File upload for chat data
+chat_file = st.file_uploader("Upload Chat Data CSV", type=["csv"])
+if chat_file is not None:
+    chat_df = pd.read_csv(chat_file)
+    # Convert createdAt to datetime
+    chat_df['createdAt'] = pd.to_datetime(chat_df['createdAt']).dt.tz_localize(None)
+    
+    # Filter chat data based on hasFreeMins and end_reason
+    filtered_chat_df = chat_df[(chat_df['hasFreeMins'] == 0) & (chat_df['endReason'] != 'NOT_STARTED')]
 
-# Convert createdAt to datetime for both dataframes
-chat_df['createdAt'] = pd.to_datetime(chat_df['createdAt']).dt.tz_localize(None)
-profile_df['createdAt'] = pd.to_datetime(profile_df['createdAt']).dt.tz_localize(None)
-
-# Filter chat data based on hasFreeMins and end_reason
-filtered_chat_df = chat_df[(chat_df['hasFreeMins'] == 0) & (chat_df['endReason'] != 'NOT_STARTED')]
+# File upload for user profile data
+profile_file = st.file_uploader("Upload User Profile Data CSV", type=["csv"])
+if profile_file is not None:
+    profile_df = pd.read_csv(profile_file)
+    profile_df['userId'] = profile_df['_id']
+    # Convert createdAt to datetime
+    profile_df['createdAt'] = pd.to_datetime(profile_df['createdAt']).dt.tz_localize(None)
 
 # Function to count users who are completing their 4th chat on the target date
 def get_users_completing_4th_chat_today(filtered_chat_df, profile_df, target_date):
@@ -63,21 +68,22 @@ def iterate_date_range(filtered_chat_df, profile_df, start_date_str, end_date_st
     
     return pd.DataFrame(results)
 
-# Streamlit UI
-st.title("North Star Metric Dashboard")
-
+# Date input fields
 start_date = st.text_input("Enter start date (DD-MM-YY):", "15-08-24")
 end_date = st.text_input("Enter end date (DD-MM-YY):", "22-10-24")
 
 if st.button("Calculate"):
-    result_df = iterate_date_range(filtered_chat_df, profile_df, start_date, end_date)
-    
-    # Display the results
-    st.write(result_df)
-    
-    # Plot the graph
-    fig = px.line(result_df, x='date', y='unique_user_count', title='North Star Metric Over Time', markers=True)
-    st.plotly_chart(fig)
-    
-    # Save results to CSV
-    result_df.to_csv('North_Star_Metrix_june_oct_with_userIDs.csv', index=False)
+    if chat_file is not None and profile_file is not None:
+        result_df = iterate_date_range(filtered_chat_df, profile_df, start_date, end_date)
+        
+        # Display the results
+        st.write(result_df)
+        
+        # Plot the graph
+        fig = px.line(result_df, x='date', y='unique_user_count', title='North Star Metric Over Time', markers=True)
+        st.plotly_chart(fig)
+        
+        # Save results to CSV
+        result_df.to_csv('North_Star_Metrix_june_oct_with_userIDs.csv', index=False)
+    else:
+        st.warning("Please upload both chat and user profile data files.")
