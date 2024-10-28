@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import plotly.express as px
 
 # Load chat and user profile data
 @st.cache_data
@@ -80,11 +79,6 @@ if chat_file and profile_file:
         
         # Display the results
         st.write(result_df)
-        
-        # Plot the North Star Metric
-        fig = px.line(result_df, x='date', y='unique_user_count', title="North Star Metric Over Time",
-                      labels={'date': 'Date', 'unique_user_count': 'North Star Metric (Unique User Count)'})
-        st.plotly_chart(fig)
         
         # Download results as CSV
         csv = result_df.to_csv(index=False).encode('utf-8')
