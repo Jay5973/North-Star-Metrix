@@ -133,8 +133,23 @@ if raw_file and completed_file and astro_file:
     st.dataframe(merged_data)
 
     # Plot the graph
-    fig = px.line(merged_data, x='date', y='chat_intake_requests', color='name', title="Chat Intake Requests Over Time")
-    st.plotly_chart(fig)
+    import plotly.express as px
+
+# Plot the graph for Chat Intake Requests - Hour-wise and Astrologer-wise
+    fig1 = px.line(merged_data, x='hour', y='chat_intake_requests', color='name', line_group='name', title="Chat Intake Requests Hour-wise Astrologer-wise")
+    fig1.update_layout(xaxis_title="Hour", yaxis_title="Chat Intake Requests")
+    st.plotly_chart(fig1)
+    
+    # Plot the graph for Chat Accept - Hour-wise and Astrologer-wise
+    fig2 = px.line(merged_data, x='hour', y='chat_accepted', color='name',line_group='name', title="Chat Accept Hour-wise Astrologer-wise")
+    fig2.update_layout(xaxis_title="Hour", yaxis_title="Chat Accepted")
+    st.plotly_chart(fig2)
+    
+    # Plot the graph for Chat Completed - Hour-wise and Astrologer-wise
+    fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
+    fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
+    st.plotly_chart(fig3)
+
 
     # Option to download final data
     csv = merged_data.to_csv(index=False)
