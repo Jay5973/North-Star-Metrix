@@ -150,6 +150,15 @@ if raw_file and completed_file and astro_file:
     fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
     st.plotly_chart(fig3)
 
+    # Group data to count distinct astrologers per hour
+    active_astros_per_hour = merged_data.groupby('hour')['name'].nunique().reset_index()
+    
+    # Plot the graph for Active Astrologers per Hour
+    fig4 = px.line(active_astros_per_hour, x='hour', y='name', title="Active Astrologers per Hour")
+    fig4.update_layout(xaxis_title="Hour", yaxis_title="Number of Active Astrologers")
+    st.plotly_chart(fig4)
+
+
 
     # Option to download final data
     csv = merged_data.to_csv(index=False)
