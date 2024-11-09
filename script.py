@@ -158,49 +158,6 @@ if raw_file and completed_file and astro_file:
     fig4.update_layout(xaxis_title="Hour", yaxis_title="Number of Active Astrologers")
     st.plotly_chart(fig4)
 
-    def get_unique_user_counts(data, event_type_column):
-    """
-    Function to count unique users based on a specific event type.
-    """
-    return data.drop_duplicates(subset=['user_id', event_type_column]) \
-               .groupby('hour')['user_id'] \
-               .nunique() \
-               .reset_index(name=f'unique_{event_type_column}_count')
-
-        # Chat intake requests, ensuring unique users per hour
-    unique_chat_intakes = get_unique_user_counts(merged_data[merged_data['event_name'] == 'chat_intake_request'], 'event_name')
-    
-    # Chat accepts, ensuring unique users per hour
-    unique_chat_accepts = get_unique_user_counts(merged_data[merged_data['event_name'] == 'chat_accept'], 'event_name')
-    
-    # Chat completes, ensuring unique users per hour
-    unique_chat_completes = get_unique_user_counts(merged_data[merged_data['event_name'] == 'chat_complete'], 'event_name')
-
-    # Merge the counts for chat intake, chat accept, and chat complete per hour
-    merged_event_counts = unique_chat_intakes.merge(unique_chat_accepts, on='hour', how='outer') \
-                                              .merge(unique_chat_completes, on='hour', how='outer')
-    
-    # Fill NaN values with 0 (in case no event occurred for a particular hour)
-    merged_event_counts.fillna(0, inplace=True)
-
-    # Plot the graph showing total chat intakes, accepts, and completes per hour
-    fig5 = px.line(merged_event_counts, x='hour', y=['unique_event_name_count', 'unique_event_name_count_x', 'unique_event_name_count_y'],
-                   labels={
-                       'unique_event_name_count': 'Unique Chat Intakes',
-                       'unique_event_name_count_x': 'Unique Chat Accepts',
-                       'unique_event_name_count_y': 'Unique Chat Completes'
-                   },
-                   title="Unique Chat Intakes, Accepts, and Completes per Hour")
-    
-    # Customize axis titles
-    fig5.update_layout(xaxis_title="Hour", yaxis_title="Count of Unique Users")
-    
-    # Display the graph
-    st.plotly_chart(fig5)
-
-
-
-
     # Option to download final data
     csv = merged_data.to_csv(index=False)
     st.download_button("Download Final Data as CSV", data=csv, file_name="combined_data_final_hour_wise.csv", mime="text/csv")
