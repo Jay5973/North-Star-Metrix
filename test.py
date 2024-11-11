@@ -199,9 +199,9 @@ if raw_file and completed_file and astro_file:
     st.plotly_chart(fig2)
     
     # Plot the graph for Chat Completed - Hour-wise and Astrologer-wise
-    fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
-    fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
-    st.plotly_chart(fig3)
+    # fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
+    # fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
+    # st.plotly_chart(fig3)
 
     # Group data to count distinct astrologers per hour
     # active_astros_per_hour = merged_data.groupby('hour')['name'].nunique().reset_index()
