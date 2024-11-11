@@ -222,6 +222,8 @@ if raw_file and completed_file and astro_file:
     fig4.update_layout(xaxis_title="Hour", yaxis_title="Count")
     st.plotly_chart(fig4)
 
+    print(merged_overall.columns)
+
     # Option to download final data
     csv = merged_data.to_csv(index=False)
     st.download_button("Download Final Data as CSV", data=csv, file_name="combined_data_final_hour_wise.csv", mime="text/csv")
