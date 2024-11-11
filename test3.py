@@ -96,7 +96,7 @@ if raw_file and completed_file and astro_file:
             accept_events['date'] = accept_events['event_time'].dt.date
             accept_events['hour'] = accept_events['event_time'].dt.hour
             accept_counts = accept_events.groupby(['user_id', 'date', 'hour'])['clientId'].nunique().reset_index()
-            accept_counts.rename(columns={'clientId': 'paid_chat_completed', 'user_id': '_id'}, inplace=True)
+            accept_counts.rename(columns={'clientId': 'paid_chats_completed', 'user_id': '_id'}, inplace=True)
             return accept_counts
 
         def process_chat_completed_events1(self):
