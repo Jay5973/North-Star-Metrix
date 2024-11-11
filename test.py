@@ -195,10 +195,10 @@ if raw_file and completed_file and astro_file:
     merged_counts = merged_counts.merge(unique_chats_completed_count, on='hour', how='outer', suffixes=('', '_completed_chats'))
 
     # Plot the graph
-    fig4 = px.line(merged_counts, x='hour', y=['name', 'unique_users_count', 'unique_free_chats_completed_count', 'unique_chats_completed_count'], 
+    fig4 = px.line(merged_counts, x='hour', y=['unique_users_count', 'unique_free_chats_completed_count', 'unique_chats_completed_count'], 
                 title="Active Astrologers and User Counts per Hour",
                 labels={
-                    "name": "Active Astrologers",
+                    # "name": "Active Astrologers",
                     "unique_users_count": "Unique Users",
                     "unique_free_chats_completed_count": "Free Chats Completed",
                     "unique_chats_completed_count": "Chats Completed"
