@@ -195,45 +195,42 @@ if raw_file and completed_file and astro_file:
     st.write("### Final Processed Data")
     st.dataframe(merged_data)
 
-    # Plot the graph
     import plotly.express as px
-
-# Plot the graph for Chat Intake Requests - Hour-wise and Astrologer-wise
+    
+    # Plot the graph for Chat Intake Requests - Hour-wise and Astrologer-wise
     fig1 = px.line(merged_data, x='hour', y='chat_intake_requests', color='name', line_group='name', title="Chat Intake Requests Hour-wise Astrologer-wise")
     fig1.update_layout(xaxis_title="Hour", yaxis_title="Chat Intake Requests")
+    fig1.update_traces(connectgaps=False)
     st.plotly_chart(fig1)
     
     # Plot the graph for Chat Accept - Hour-wise and Astrologer-wise
-    fig2 = px.line(merged_data, x='hour', y='chat_accepted', color='name',line_group='name', title="Chat Accept Hour-wise Astrologer-wise")
+    fig2 = px.line(merged_data, x='hour', y='chat_accepted', color='name', line_group='name', title="Chat Accept Hour-wise Astrologer-wise")
     fig2.update_layout(xaxis_title="Hour", yaxis_title="Chat Accepted")
+    fig2.update_traces(connectgaps=False)
     st.plotly_chart(fig2)
     
     # Plot the graph for Chat Completed - Hour-wise and Astrologer-wise
-    # fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
-    # fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
-    # st.plotly_chart(fig3)
-
-    # Group data to count distinct astrologers per hour
-    # active_astros_per_hour = merged_data.groupby('hour')['name'].nunique().reset_index()
-
-    fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
+    fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name', line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
     fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
+    fig3.update_traces(connectgaps=False)
     st.plotly_chart(fig3)
-
+    
     print(merged_overall.columns)
     
-    # Plot the graph for Active Astrologers per Hour
-    fig4 = px.line(merged_overall, x='hour', y=['chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall', 'astros_live','users_live'], 
-                title="Overall Metrics",
-                labels={
-                    'chat_intake_overall' : 'chat_intakes',
-                    'chat_accepted_overall' : 'chat_accepts',
-                    'chat_completed_overall' : 'chat_completes',
-                    'astros_live' : 'Astrologers_Live',
-                    'users_live' : 'Users_Live'
-                })
+    # Plot the graph for Overall Metrics
+    fig4 = px.line(merged_overall, x='hour', y=['chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall', 'astros_live', 'users_live'], 
+                   title="Overall Metrics",
+                   labels={
+                       'chat_intake_overall': 'Chat Intakes',
+                       'chat_accepted_overall': 'Chat Accepts',
+                       'chat_completed_overall': 'Chat Completes',
+                       'astros_live': 'Astrologers Live',
+                       'users_live': 'Users Live'
+                   })
     fig4.update_layout(xaxis_title="Hour", yaxis_title="Count")
+    fig4.update_traces(connectgaps=False)
     st.plotly_chart(fig4)
+
 
     # Option to download final data
     csv = merged_data.to_csv(index=False)
