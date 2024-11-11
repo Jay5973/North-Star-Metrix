@@ -143,9 +143,6 @@ if raw_file and completed_file and astro_file:
     paid_completed_data = processor.process_paid_chat_completed_events()
     cancelled = processor.process_chat_cancels()
     cancel_time = processor.cancellation_time()
-    unique_users_count = processor.unique_user_counts_hour_wise('open_page')
-    unique_free_chats_completed_count = processor.process_overall_free_chat_completed_events()
-    unique_chats_completed_count = processor.process_overall_chat_completed_events()
 
     # Combine results
     final_results = intake_data
