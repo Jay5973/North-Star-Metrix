@@ -209,6 +209,8 @@ if raw_file and completed_file and astro_file:
     fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
     fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
     st.plotly_chart(fig3)
+
+    print(merged_overall.columns)
     
     # Plot the graph for Active Astrologers per Hour
     fig4 = px.line(merged_overall, x='hour', y=['chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall', 'astros_live'], 
@@ -221,8 +223,6 @@ if raw_file and completed_file and astro_file:
                 })
     fig4.update_layout(xaxis_title="Hour", yaxis_title="Count")
     st.plotly_chart(fig4)
-
-    print(merged_overall.columns)
 
     # Option to download final data
     csv = merged_data.to_csv(index=False)
