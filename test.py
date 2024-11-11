@@ -179,7 +179,7 @@ if raw_file and completed_file and astro_file:
 
     # Merge with astro data and display final data
     merged_data = processor.merge_with_astro_data(final_results)
-    merged_overall = processor.merge_with_astro_data
+    merged_overall = processor.merge_with_hour_only(final_overall)
     
     # Display final output
     st.write("### Final Processed Data")
