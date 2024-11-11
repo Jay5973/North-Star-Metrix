@@ -143,7 +143,7 @@ if raw_file and completed_file and astro_file:
             return user_counts
 
         def users_live(self):
-            intake_events = self.raw_df[(self.raw_df['event_name'] == 'chat_intake_submit')]
+            intake_events = self.raw_df[(self.raw_df['event_name'] == 'page_open')]
             intake_events['event_time'] = pd.to_datetime(intake_events['event_time'], utc=True) + pd.DateOffset(hours=5, minutes=30)
             intake_events['date'] = intake_events['event_time'].dt.date
             intake_events['hour'] = intake_events['event_time'].dt.hour
