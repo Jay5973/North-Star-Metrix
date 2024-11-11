@@ -101,7 +101,6 @@ if raw_file and completed_file and astro_file:
             return merged_data[columns]
 
         def merge_with_hour_only(self, final_data):
-            merged_data = pd.merge(final_data, self.astro_df, on='_id', how='left')
             columns = ['date', 'hour', 'chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall','astros_live']
             return merged_data[columns]
         
@@ -142,14 +141,14 @@ if raw_file and completed_file and astro_file:
             user_counts = intake_events.groupby(['date', 'hour'])['user_id'].nunique().reset_index()
             user_counts.rename(columns={'user_id': 'astros_live'}, inplace=True)
             return user_counts
-        
+
         def users_live(self):
             intake_events = self.raw_df[(self.raw_df['event_name'] == 'chat_intake_submit')]
             intake_events['event_time'] = pd.to_datetime(intake_events['event_time'], utc=True) + pd.DateOffset(hours=5, minutes=30)
             intake_events['date'] = intake_events['event_time'].dt.date
             intake_events['hour'] = intake_events['event_time'].dt.hour
             user_counts = intake_events.groupby(['date', 'hour'])['user_id'].nunique().reset_index()
-            user_counts.rename(columns={'user_id': 'astros_live'}, inplace=True)
+            user_counts.rename(columns={'user_id': 'users_live'}, inplace=True)
             return user_counts
 
     # Read CSV files
@@ -188,12 +187,10 @@ if raw_file and completed_file and astro_file:
     final_overall = pd.merge(final_overall, astro_live, on=['date', 'hour'], how='outer')
     final_overall = pd.merge(final_overall, users_live, on=['date', 'hour'], how='outer')
 
-    print(final_overall.columns)
-
-
     # Merge with astro data and display final data
     merged_data = processor.merge_with_astro_data(final_results)
     merged_overall = final_overall
+    
     # Display final output
     st.write("### Final Processed Data")
     st.dataframe(merged_data)
@@ -211,7 +208,7 @@ if raw_file and completed_file and astro_file:
     fig2.update_layout(xaxis_title="Hour", yaxis_title="Chat Accepted")
     st.plotly_chart(fig2)
     
-    # # Plot the graph for Chat Completed - Hour-wise and Astrologer-wise
+    # Plot the graph for Chat Completed - Hour-wise and Astrologer-wise
     # fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
     # fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
     # st.plotly_chart(fig3)
@@ -222,9 +219,11 @@ if raw_file and completed_file and astro_file:
     fig3 = px.line(merged_data, x='hour', y='chat_completed', color='name',line_group='name', title="Chat Completed Hour-wise Astrologer-wise")
     fig3.update_layout(xaxis_title="Hour", yaxis_title="Chat Completed")
     st.plotly_chart(fig3)
+
+    print(merged_overall.columns)
     
     # Plot the graph for Active Astrologers per Hour
-    fig4 = px.line(merged_overall, x='hour', y=['chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall', 'astros_live'], 
+    fig4 = px.line(merged_overall, x='hour', y=['chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall', 'astros_live','users_live'], 
                 title="Overall Metrics",
                 labels={
                     'chat_intake_overall' : 'chat_intakes',
