@@ -10,7 +10,7 @@ st.title("Astrology Chat Data Processor")
 
 # Step 1: Upload Files
 raw_file = st.file_uploader("Upload raw_data.csv", type="csv")
-astro_file = pd.read_csv("https://github.com/Jay5973/North-Star-Metrix/blob/main/astro_type.csv")
+astro_file = pd.read_csv("https://github.com/Jay5973/North-Star-Metrix/blob/main/astro_type.csv?raw=true")
 
 if raw_file and astro_file:
     
