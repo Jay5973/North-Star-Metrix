@@ -186,7 +186,7 @@ if raw_file:
 
     # Read CSV files
     raw_df = pd.read_csv(raw_file)
-    astro_df = pd.read_csv(astro_file)
+    astro_df = pd.read_csv('https://github.com/Jay5973/North-Star-Metrix/blob/main/astro_type.csv?raw=true')
 
     # Step 4: Process Data
     raw_df = extract_json(raw_df, 'other_data')
