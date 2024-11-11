@@ -8,10 +8,9 @@ st.title("Astrology Chat Data Processor")
 
 # Step 1: Upload Files
 raw_file = st.file_uploader("Upload raw_data.csv", type="csv")
-completed_file = st.file_uploader("Upload chat_completed_data.csv", type="csv")
 astro_file = st.file_uploader("Upload astro_type.csv", type="csv")
 
-if raw_file and completed_file and astro_file:
+if raw_file and astro_file:
     
     # Step 2: Extract JSON Data from raw_data.csv and Save to a DataFrame
     def extract_json(raw_df, json_column):
@@ -28,9 +27,8 @@ if raw_file and completed_file and astro_file:
 
     # Step 3: Process Events to Calculate Unique Users
     class UniqueUsersProcessor:
-        def __init__(self, raw_df, completed_df, astro_df):
+        def __init__(self, raw_df,astro_df):
             self.raw_df = raw_df
-            self.completed_df = completed_df
             self.astro_df = astro_df
 
         def process_chat_intake_requests(self):
@@ -99,23 +97,23 @@ if raw_file and completed_file and astro_file:
             accept_counts.rename(columns={'clientId': 'paid_chats_completed', 'user_id': '_id'}, inplace=True)
             return accept_counts
 
-        def process_chat_completed_events1(self):
-            completed_events = self.completed_df[(self.completed_df['status'] == 'COMPLETED') & (self.completed_df['type'].isin(['FREE', 'PAID']))]
-            completed_events['createdAt'] = pd.to_datetime(completed_events['createdAt'], utc=True)
-            completed_events['date'] = completed_events['createdAt'].dt.date
-            completed_events['hour'] = completed_events['createdAt'].dt.hour
-            completed_counts = completed_events.groupby(['astrologerId', 'date', 'hour'])['userId'].nunique().reset_index()
-            completed_counts.rename(columns={'userId': 'chat_completed', 'astrologerId': '_id'}, inplace=True)
-            return completed_counts
+        # def process_chat_completed_events1(self):
+        #     completed_events = self.completed_df[(self.completed_df['status'] == 'COMPLETED') & (self.completed_df['type'].isin(['FREE', 'PAID']))]
+        #     completed_events['createdAt'] = pd.to_datetime(completed_events['createdAt'], utc=True)
+        #     completed_events['date'] = completed_events['createdAt'].dt.date
+        #     completed_events['hour'] = completed_events['createdAt'].dt.hour
+        #     completed_counts = completed_events.groupby(['astrologerId', 'date', 'hour'])['userId'].nunique().reset_index()
+        #     completed_counts.rename(columns={'userId': 'chat_completed', 'astrologerId': '_id'}, inplace=True)
+        #     return completed_counts
 
-        def process_paid_chat_completed_events1(self):
-            paid_events = self.completed_df[(self.completed_df['status'] == 'COMPLETED') & (self.completed_df['type'] == 'PAID')]
-            paid_events['createdAt'] = pd.to_datetime(paid_events['createdAt'], utc=True)
-            paid_events['date'] = paid_events['createdAt'].dt.date
-            paid_events['hour'] = paid_events['createdAt'].dt.hour
-            paid_counts = paid_events.groupby(['astrologerId', 'date', 'hour'])['userId'].nunique().reset_index()
-            paid_counts.rename(columns={'userId': 'paid_chats_completed', 'astrologerId': '_id'}, inplace=True)
-            return paid_counts
+        # def process_paid_chat_completed_events1(self):
+        #     paid_events = self.completed_df[(self.completed_df['status'] == 'COMPLETED') & (self.completed_df['type'] == 'PAID')]
+        #     paid_events['createdAt'] = pd.to_datetime(paid_events['createdAt'], utc=True)
+        #     paid_events['date'] = paid_events['createdAt'].dt.date
+        #     paid_events['hour'] = paid_events['createdAt'].dt.hour
+        #     paid_counts = paid_events.groupby(['astrologerId', 'date', 'hour'])['userId'].nunique().reset_index()
+        #     paid_counts.rename(columns={'userId': 'paid_chats_completed', 'astrologerId': '_id'}, inplace=True)
+        #     return paid_counts
 
         def merge_with_astro_data(self, final_data):
             merged_data = pd.merge(final_data, self.astro_df, on='_id', how='left')
@@ -126,14 +124,14 @@ if raw_file and completed_file and astro_file:
             columns = ['date', 'hour', 'chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall','astros_live']
             return merged_data[columns]
         
-        def process_overall_chat_completed_events1(self):
-            completed_events = self.completed_df[(self.completed_df['status'] == 'COMPLETED') & (self.completed_df['type'].isin(['FREE', 'PAID']))]
-            completed_events['createdAt'] = pd.to_datetime(completed_events['createdAt'], utc=True)
-            completed_events['date'] = completed_events['createdAt'].dt.date
-            completed_events['hour'] = completed_events['createdAt'].dt.hour
-            completed_counts = completed_events.groupby(['date', 'hour'])['userId'].nunique().reset_index()
-            completed_counts.rename(columns={'userId': 'chat_completed_overall'}, inplace=True)
-            return completed_counts
+        # def process_overall_chat_completed_events1(self):
+        #     completed_events = self.completed_df[(self.completed_df['status'] == 'COMPLETED') & (self.completed_df['type'].isin(['FREE', 'PAID']))]
+        #     completed_events['createdAt'] = pd.to_datetime(completed_events['createdAt'], utc=True)
+        #     completed_events['date'] = completed_events['createdAt'].dt.date
+        #     completed_events['hour'] = completed_events['createdAt'].dt.hour
+        #     completed_counts = completed_events.groupby(['date', 'hour'])['userId'].nunique().reset_index()
+        #     completed_counts.rename(columns={'userId': 'chat_completed_overall'}, inplace=True)
+        #     return completed_counts
         
         def process_overall_chat_completed_events(self):
             intake_events = self.raw_df[self.raw_df['event_name'] == 'chat_msg_send']
@@ -186,12 +184,11 @@ if raw_file and completed_file and astro_file:
 
     # Read CSV files
     raw_df = pd.read_csv(raw_file)
-    completed_df = pd.read_csv(completed_file)
     astro_df = pd.read_csv(astro_file)
 
     # Step 4: Process Data
     raw_df = extract_json(raw_df, 'other_data')
-    processor = UniqueUsersProcessor(raw_df, completed_df, astro_df)
+    processor = UniqueUsersProcessor(raw_df, astro_df)
     
     # Process each event type
     intake_data = processor.process_chat_intake_requests()
