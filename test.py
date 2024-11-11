@@ -101,7 +101,7 @@ if raw_file and completed_file and astro_file:
             return merged_data[columns]
 
         def merge_with_hour_only(self, final_data):
-            merged_data = pd.merge(final_data, self.astro_df, on='_id', how='left')
+            merged_data = pd.merge(final_data, self.astro_df, on='hour', how='left')
             columns = ['date', 'hour', 'chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall','astros_live']
             return merged_data[columns]
         
