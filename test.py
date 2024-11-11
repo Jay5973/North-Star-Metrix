@@ -190,7 +190,7 @@ if raw_file and completed_file and astro_file:
     # Calculate unique user counts and chat completions
     unique_users_count = processor.unique_user_counts_hour_wise('open_page')
     unique_free_chats_completed_count = processor.process_overall_free_chat_completed_events()
-    unique_chats_completed_count = processor.process_overall_chat_completed_events()
+    unique_chats_completed_count = processor.process_overall_total_chat_completed_events()
 
     # Merge datasets on hour
     merged_counts = active_astros_per_hour.merge(unique_users_count, on='hour', how='outer', suffixes=('', '_users'))
