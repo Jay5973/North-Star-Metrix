@@ -250,18 +250,18 @@ if raw_file:
     print(merged_overall.columns)
     
     # Plot the graph for Overall Metrics
-    fig4 = px.line(merged_overall, x='hour', y=['chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall', 'astros_live', 'users_live'], 
-                   title="Overall Metrics",
-                   labels={
-                       'chat_intake_overall': 'Chat Intakes',
-                       'chat_accepted_overall': 'Chat Accepts',
-                       'chat_completed_overall': 'Chat Completes',
-                       'astros_live': 'Astrologers Live',
-                       'users_live': 'Users Live'
-                   })
-    fig4.update_layout(xaxis_title="Hour", yaxis_title="Count")
-    fig4.update_traces(connectgaps=False)
-    st.plotly_chart(fig4)
+        fig4 = px.line(merged_overall, x='hour', y=['chat_intake_overall', 'chat_accepted_overall', 'chat_completed_overall', 'astros_live', 'users_live'], 
+                       title="Overall Metrics",
+                       labels={
+                           'chat_intake_overall': 'Chat Intakes',
+                           'chat_accepted_overall': 'Chat Accepts',
+                           'chat_completed_overall': 'Chat Completes',
+                           'astros_live': 'Astrologers Live',
+                           'users_live': 'Users Live'
+                       })
+        fig4.update_layout(xaxis_title="Hour", yaxis_title="Count")
+        fig4.update_traces(connectgaps=False)
+        st.plotly_chart(fig4)
 
 
     # Option to download final data
