@@ -12,7 +12,7 @@ st.title("Astrology Chat Data Processor")
 raw_file = st.file_uploader("Upload raw_data.csv", type="csv")
 astro_file = pd.read_csv("https://github.com/Jay5973/North-Star-Metrix/blob/main/astro_type.csv?raw=true")
 
-if raw_file and astro_file:
+if raw_file:
     
     # Step 2: Extract JSON Data from raw_data.csv and Save to a DataFrame
     def extract_json(raw_df, json_column):
